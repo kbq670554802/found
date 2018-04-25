@@ -127,12 +127,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     date_of_birth = models.DateField()
     # is_active = models.BooleanField(default=True)
-    # is_admin = models.BooleanField(default=False)
-    is_staff = models.BooleanField(
-        'staff status',
-        default=False,
-        help_text='Designates whether the user can log into this admin site.',
-    )
+    is_admin = models.BooleanField(default=False)
+    # is_staff = models.BooleanField(
+    #     'staff status',
+    #     default=False,
+    #     help_text='Designates whether the user can log into this admin site.',
+    # )
     is_active = models.BooleanField(
         'active',
         default=True,
@@ -157,4 +157,4 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def is_staff(self):
-        return self.is_staff
+        return self.is_admin
