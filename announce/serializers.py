@@ -1,5 +1,7 @@
 from django import forms
 
+from account.models import User
+from announce.models import Goods
 from ._serializers import serializers, UsernameSerializer
 
 
@@ -47,3 +49,16 @@ class GenerateUserSerializer(serializers.Serializer):
 class ImportUserSeralizer(serializers.Serializer):
     users = serializers.ListField(
         child=serializers.ListField(child=serializers.CharField(max_length=64)))
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('email', 'date_of_birth')
+
+
+class GoodsSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    class Meta:
+        model = Goods
+        fields = ('title', 'content', 'lost_address', 'contact_address', 'phone', 'user', 'create_time', 'modify_time')
