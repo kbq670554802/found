@@ -83,14 +83,14 @@ class APIView(View):
     def response(self, data):
         return self.response_class.response(data)
 
-    def success(self, message=None, data=None):
-        return self.response({"error": None, 'message': message, "data": data})
+    def success(self, code=0, msg=None, data=None):
+        return self.response({'code': code, "error": None, 'msg': msg, "data": data})
 
-    def fail(self, message=None, data=None):
-        return self.response({"error": message, 'message': message, "data": data})
+    def fail(self, code=-1, msg=None, err="error", data=None):
+        return self.response({'code': code, 'msg': msg, "error": err, "data": data})
 
-    def error(self, msg="error", err="error"):
-        return self.response({"error": err, "data": msg})
+    def error(self, code=-2, msg="error", err="error"):
+        return self.response({'code': code, "error": err, 'msg': msg, "data": None})
 
     def _serializer_error_to_str(self, errors):
         for k, v in errors.items():
@@ -103,7 +103,7 @@ class APIView(View):
     def invalid_serializer(self, serializer):
         k, v = self._serializer_error_to_str(serializer.errors)
         if k != "non_field_errors":
-            return self.error(err="invalid-" + k, msg=k + ": " + v)
+            return self.error(err="invalid:" + k + ", " + v, msg=v)
         else:
             return self.error(err="invalid-field", msg=v)
 
@@ -155,6 +155,17 @@ class APIView(View):
         except Exception as e:
             logger.exception(e)
             return self.server_error()
+
+    def result_list(self, result_list=None, page_size=0, page_index=0, page_count=0, total_count=0, has_more=False):
+        data = {
+            'result': result_list,
+            'page_size': page_size,
+            'page_index': page_index,
+            'page_count': page_count,
+            'total_count': total_count,
+            'has_more': has_more
+        }
+        return data
 
 
 class CSRFExemptAPIView(APIView):

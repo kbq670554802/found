@@ -130,3 +130,5 @@ AUTH_USER_MODEL = 'account.User'
 REST_FRAMEWORK = {
     'DATETIME_FORMAT': '%Y-%m-%d %H:%M:%S'
 }
+
+# APPEND_SLASH = False

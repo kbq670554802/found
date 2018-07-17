@@ -1,3 +1,5 @@
+import django.utils.timezone as timezone
+
 from django.contrib import auth
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import GroupManager, Permission, _user_get_all_permissions, _user_has_module_perms, \
@@ -124,10 +126,13 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name='email address',
         max_length=255,
         unique=True,
+        db_column='email'
     )
-    date_of_birth = models.DateField()
+    real_name = models.CharField(max_length=30, default='', db_column='real_name')
+    avatar = models.CharField(max_length=255, default='')
+    birth = models.DateField(default=timezone.now, db_column='birth')
     # is_active = models.BooleanField(default=True)
-    is_admin = models.BooleanField(default=False)
+    is_admin = models.BooleanField(default=False, db_column='is_admin')
     # is_staff = models.BooleanField(
     #     'staff status',
     #     default=False,
@@ -137,9 +142,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         'active',
         default=True,
         help_text=
-            'Designates whether this user should be treated as active. '
-            'Unselect this instead of deleting accounts.'
-        ,
+        'Designates whether this user should be treated as active. '
+        'Unselect this instead of deleting accounts.'
+        , db_column='is_active'
     )
     objects = UserManager()
 
