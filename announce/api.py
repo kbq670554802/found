@@ -7,6 +7,7 @@ from django.http import HttpResponse, QueryDict
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
+from rest_framework.views import APIView
 
 logger = logging.getLogger("")
 
@@ -51,7 +52,7 @@ class JSONResponse(object):
         return resp
 
 
-class APIView(View):
+class APIView(APIView):
     """
     Django view的父类, 和django-rest-framework的用法基本一致
      - request.data获取解析之后的json或者urlencoded数据, dict类型

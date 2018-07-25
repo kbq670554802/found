@@ -2,6 +2,11 @@ from time import strftime
 
 from django.contrib import auth
 from django.contrib.admin import exceptions
+from rest_framework.authentication import TokenAuthentication, BasicAuthentication
+from rest_framework.authtoken.models import Token
+from rest_framework.decorators import authentication_classes, permission_classes
+from rest_framework.permissions import IsAuthenticated
+
 from account.models import User
 from django.core.paginator import Paginator
 
@@ -53,14 +58,23 @@ class UserLoginAPI(APIView):
         if r.status_code == 200:
             content = json.loads(r.text)
             openid = content.get('openid', '')
+            try:
+                user = User.objects.get(openid=openid)
+            except User.DoesNotExist:
+                user = User()
+                user.openid = openid
+                user.save()
             session_key = content.get('session_key', '')
-            token = 'ri4in4d9i494944494j94h4'
-            return self.success(msg='登录成功', data=token)
+            # token = Token.objects.create(user=user)
+            token = Token.objects.get_or_create(user=user)
+            return self.success(msg='登录成功', data=token[0].key)
         else:
             return self.fail(msg='登录失败')
 
 
 class GoodsAPI(APIView):
+    @authentication_classes((TokenAuthentication, BasicAuthentication))
+    @permission_classes((IsAuthenticated,))
     @validate_serializer(GoodsEditValidate)
     def post(self, request, good_id):
         data = request.data
@@ -70,7 +84,7 @@ class GoodsAPI(APIView):
                 serializer.save()
                 return self.success(msg='发布成功')
             return self.fail(msg='提交失败,请重新提交')
-        except:
+        except Exception as e:
             return self.fail(msg='服务器故障,提交失败')
 
     @validate_serializer(GoodsEditValidate)

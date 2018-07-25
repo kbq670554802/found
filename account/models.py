@@ -122,6 +122,7 @@ class PermissionsMixin(models.Model):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    openid = models.CharField(max_length=30, default='', db_column='openid')
     email = models.EmailField(
         verbose_name='email address',
         max_length=255,
