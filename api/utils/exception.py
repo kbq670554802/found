@@ -17,7 +17,6 @@ def custom_exception_handler(exc, context):
         response.data['code'] = response.status_code
         response.status_code = status.HTTP_200_OK
         # response.data['data'] = None
-
         if data:
             if isinstance(exc, ValidationError):  # 表单校验失败
                 values = list(data.values())
