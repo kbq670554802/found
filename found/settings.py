@@ -35,9 +35,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'rest_framework.authtoken',
     'account',
     'announce',
+    'api',
 ]
 
 MIDDLEWARE = [
@@ -82,9 +84,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'found',
-        'USER': 'root',
-        'PASSWORD': '123456',
-        'HOST': '127.0.0.1',
+        'USER': 'admin',
+        'PASSWORD': 'Kbq123...',
+        'HOST': '119.28.9.176',
         'PORT': '3306',
     }
 }
@@ -111,7 +113,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
 # LANGUAGE_CODE = 'en-us'
-LANGUAGE_CODE = 'zh_Hans'
+# LANGUAGE_CODE = 'zh_Hans'
+LANGUAGE_CODE = 'zh_CN'
 
 # TIME_ZONE = 'UTC'
 USE_TZ = False  # 设置为False，TIME_ZONE才有效
@@ -131,10 +134,9 @@ AUTH_USER_MODEL = 'account.User'
 REST_FRAMEWORK = {
     'DATETIME_FORMAT': '%Y-%m-%d %H:%M:%S',
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
-    )
-
+        # 'rest_framework.authentication.TokenAuthentication',
+    ),
+    'EXCEPTION_HANDLER': ('api.utils.exception.custom_exception_handler'),
 }
 
 # APPEND_SLASH = False
