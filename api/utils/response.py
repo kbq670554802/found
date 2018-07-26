@@ -53,7 +53,6 @@ class JsonResponse(Response):
         except (TypeError, ValueError):
             return JsonResponse(code=status.HTTP_400_BAD_REQUEST,
                                 msg='page_index和page_size必须是int!')
-
         paginator = Paginator(objs, page_size)  # paginator对象
         total = paginator.count
         try:
@@ -63,8 +62,7 @@ class JsonResponse(Response):
         except EmptyPage:
             objs_paging = paginator.page(paginator.num_pages)
 
-        serializer = serializer(objs_paging.object_list, many=True)  # 序列化操作
-
+        serializer = serializer(objs_paging.object_list, many=True)
         return JsonResponse(data={
             'detail': serializer.data,
             'page_index': page_index,
