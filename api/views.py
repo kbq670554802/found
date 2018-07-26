@@ -60,21 +60,36 @@ def goods_list(request):
 
 
 @api_view(['POST'])
-# @validate_serializer(GoodsDetailSerializer)
-# @serializer_class
 def goods_add_or_update(request):
-    # try:
-        serializer = GoodsDetailSerializer(data=request.data)
+    try:
+        id = int(request.data['id'])
+    except Exception:
+        id = 0
 
-        serializer.is_valid(raise_exception=True)
-            # data = serializer.validated_data
-            # if data['id'] == 0:
-            #     serializer.id = None
-        # serializer.validated_data
-        serializer.save()
-        return JsonResponse(msg='保存成功')
-        # else:
-            # return JsonResponse(code=-1, msg='提交失败,请重新提交')
-            # return JsonResponse(code=-1, msg=serializer.error_messages)
-    # except Exception as e:
-    #     return JsonResponse(code=-1, msg='服务器故障,提交失败')
+    serializer = GoodsDetailSerializer(data=request.data)
+    from account.models import User
+    user = User.objects.get(pk=1)
+    serializer.is_valid(raise_exception=True)
+    serializer.save(user=user)
+    return JsonResponse(msg='保存成功')
+
+
+@api_view(['POST'])
+@authentication_classes((TokenAuthentication,))
+@permission_classes((IsAuthenticated,))
+def goods_delete(request):
+    # from account.models import User
+    # user = User.objects.get(pk=2)
+    # token = Token.objects.create(user=user)
+    try:
+        id = int(request.data['id'])
+        if id <= 0:
+            return JsonResponse(code=-1, msg='失物Id非法')
+    except Exception:
+        return JsonResponse(code=-1, msg='失物Id非法')
+
+    try:
+        Goods.objects.get(pk=id, user=request.user).delete()
+        return JsonResponse(msg='删除成功')
+    except Goods.DoesNotExist:
+        return JsonResponse(code=-1, msg='信息不存在或者不是您发布的')

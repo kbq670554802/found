@@ -158,9 +158,6 @@ class GoodsDetailSerializer(serializers.ModelSerializer):
             'id', 'type', 'name', 'phone', 'contact', 'lost_date', 'lost_addr', 'summary', 'user', 'create_time',
             'content')
 
-    def create(self, validate_data):
-        return Goods.objects.create(**validate_data)
-
 
 # 失物信息序列化
 class GoodsListSerializer(serializers.ModelSerializer):
