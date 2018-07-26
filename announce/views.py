@@ -13,7 +13,7 @@ from django.core.paginator import Paginator
 from announce.api import APIView, validate_serializer
 from announce.models import Goods
 from announce.serializers import UserLoginSerializer, GoodsSerializer, PaginatorBaseSerializer, GoodsListSerializer, \
-    GoodsEditValidate
+ GoodsDetailSerializer
 import requests
 import json
 
@@ -75,11 +75,11 @@ class UserLoginAPI(APIView):
 class GoodsAPI(APIView):
     @authentication_classes((TokenAuthentication, BasicAuthentication))
     @permission_classes((IsAuthenticated,))
-    @validate_serializer(GoodsEditValidate)
+    @validate_serializer(GoodsDetailSerializer)
     def post(self, request, good_id):
         data = request.data
         try:
-            serializer = GoodsEditValidate(data=data)
+            serializer = GoodsDetailSerializer(data=data)
             if serializer.is_valid():
                 serializer.save()
                 return self.success(msg='发布成功')
@@ -87,7 +87,7 @@ class GoodsAPI(APIView):
         except Exception as e:
             return self.fail(msg='服务器故障,提交失败')
 
-    @validate_serializer(GoodsEditValidate)
+    @validate_serializer(GoodsDetailSerializer)
     def put(self, request, good_id):
         data = request.data
         try:
@@ -97,7 +97,7 @@ class GoodsAPI(APIView):
 
         try:
             # data.id = good_id
-            serializer = GoodsEditValidate(goods, data=data)
+            serializer = GoodsDetailSerializer(goods, data=data)
             if serializer.is_valid():
                 serializer.save()
                 return self.success(msg='修改成功')
@@ -126,7 +126,7 @@ class GoodsAPI(APIView):
                 goods = Goods.objects.get(pk=good_id)
             except Goods.DoesNotExist:
                 return self.fail(msg='失物信息不存在')
-            return self.success(msg='获取失物信息成功', data=GoodsEditValidate(goods).data)
+            return self.success(msg='获取失物信息成功', data=GoodsDetailSerializer(goods).data)
 
     def delete(self, request, good_id):
         try:

@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from announce.models import Goods
-from announce.serializers import GoodsListSerializer
+from announce.serializers import GoodsListSerializer, GoodsDetailSerializer
 from api.serializer.serializers import UserSerializer
 from api.utils.response import JsonResponse
 import requests
@@ -51,17 +51,30 @@ def wechat_login(request):
     else:
         return JsonResponse(code=-1, msg='登录失败')
 
+
 @api_view()
 def goods_list(request):
     type = request.GET.get('type', 0)
     goods_list = Goods.objects.filter(type=type).order_by('-create_time')
-
-    # paginator = Paginator(goods_list, page_size)
-    # goods_page = paginator.page(page_index)
-    # result = GoodsListSerializer(goods_page.object_list, many=True).data
-    # data = self.result_list(result_list=result, page_size=page_size, page_index=page_index
-    #                         , page_count=paginator.num_pages, total_count=paginator.count,
-    #                         has_more=goods_page.has_next())
-
     return JsonResponse.paging(goods_list, request, GoodsListSerializer)
-    # return self.success(msg='获取失物列表信息成功', data=data)
+
+
+@api_view(['POST'])
+# @validate_serializer(GoodsDetailSerializer)
+# @serializer_class
+def goods_add_or_update(request):
+    # try:
+        serializer = GoodsDetailSerializer(data=request.data)
+
+        serializer.is_valid(raise_exception=True)
+            # data = serializer.validated_data
+            # if data['id'] == 0:
+            #     serializer.id = None
+        # serializer.validated_data
+        serializer.save()
+        return JsonResponse(msg='保存成功')
+        # else:
+            # return JsonResponse(code=-1, msg='提交失败,请重新提交')
+            # return JsonResponse(code=-1, msg=serializer.error_messages)
+    # except Exception as e:
+    #     return JsonResponse(code=-1, msg='服务器故障,提交失败')

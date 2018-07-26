@@ -110,7 +110,7 @@ class GoodsSerializer(serializers.ModelSerializer):
 
 
 # 失物增/改信息序列化
-class GoodsEditValidate(serializers.ModelSerializer):
+class GoodsDetailSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
     name = serializers.CharField(required=True, min_length=2, max_length=20,
                                  error_messages={
@@ -157,6 +157,9 @@ class GoodsEditValidate(serializers.ModelSerializer):
         fields = (
             'id', 'type', 'name', 'phone', 'contact', 'lost_date', 'lost_addr', 'summary', 'user', 'create_time',
             'content')
+
+    def create(self, validate_data):
+        return Goods.objects.create(**validate_data)
 
 
 # 失物信息序列化
