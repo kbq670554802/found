@@ -12,21 +12,30 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '%od^1t24sv^%xv$gbja!=wl)k790l7=4!)_-3g_ags82^!^nmr'
 
-# SECURITY WARNING: don't run with debug turned on in production!
+# 常量
+DB_ENGINE = 'django.db.backends.mysql'
+DB_NAME = 'found'
+DB_USER = 'admin'
+DB_PASSWORD = 'Kbq123...'
+DB_HOST = '119.28.9.176'
+DB_PORT = '3306'
+
+LANGUAGE_CODE = 'zh_CN'  # 'en-us' , 'zh_Hans'
+USE_TZ = False  # 设置为False，TIME_ZONE才有效
+TIME_ZONE = 'Asia/Shanghai'  # 'UTC'
+USE_I18N = True
+USE_L10N = True
+STATIC_URL = '/static/'
+AUTH_USER_MODEL = 'account.User'
+APPEND_SLASH = False
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -73,26 +82,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'found.wsgi.application'
 
-# Database
-# https://docs.djangoproject.com/en/2.0/ref/settings/#databases
-
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    # }
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'found',
-        'USER': 'admin',
-        'PASSWORD': 'Kbq123...',
-        'HOST': '119.28.9.176',
-        'PORT': '3306',
+        'ENGINE': DB_ENGINE,
+        'NAME': DB_NAME,
+        'USER': DB_USER,
+        'PASSWORD': DB_PASSWORD,
+        'HOST': DB_HOST,
+        'PORT': DB_PORT,
     }
 }
-
-# Password validation
-# https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -109,28 +108,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Internationalization
-# https://docs.djangoproject.com/en/2.0/topics/i18n/
-
-# LANGUAGE_CODE = 'en-us'
-# LANGUAGE_CODE = 'zh_Hans'
-LANGUAGE_CODE = 'zh_CN'
-
-# TIME_ZONE = 'UTC'
-USE_TZ = False  # 设置为False，TIME_ZONE才有效
-TIME_ZONE = 'Asia/Shanghai'
-
-USE_I18N = True
-
-USE_L10N = True
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.0/howto/static-files/
-
-STATIC_URL = '/static/'
-
-AUTH_USER_MODEL = 'account.User'
-
+# DjangoRestFramework
 REST_FRAMEWORK = {
     'DATETIME_FORMAT': '%Y-%m-%d %H:%M:%S',
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -138,5 +116,3 @@ REST_FRAMEWORK = {
     ),
     'EXCEPTION_HANDLER': ('api.utils.exception.custom_exception_handler'),
 }
-
-# APPEND_SLASH = False
