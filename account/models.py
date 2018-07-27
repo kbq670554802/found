@@ -11,7 +11,7 @@ from django.db import models
 class UserManager(BaseUserManager):
     use_in_migrations = True
 
-    def create_user(self, email, date_of_birth, password=None):
+    def create_user(self, email, birth, password=None):
         """
         Creates and saves a User with the given email, date of
         birth and password.
@@ -21,14 +21,14 @@ class UserManager(BaseUserManager):
 
         user = self.model(
             email=self.normalize_email(email),
-            date_of_birth=date_of_birth,
+            birth=birth,
         )
 
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, date_of_birth, password):
+    def create_superuser(self, email, birth, password):
         """
         Creates and saves a superuser with the given email, date of
         birth and password.
@@ -36,7 +36,7 @@ class UserManager(BaseUserManager):
         user = self.create_user(
             email,
             password=password,
-            date_of_birth=date_of_birth,
+            birth=birth,
         )
         user.is_admin = True
         user.save(using=self._db)
@@ -150,7 +150,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['date_of_birth']
+    REQUIRED_FIELDS = ['birth']
 
     def __str__(self):
         return self.email
