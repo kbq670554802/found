@@ -92,6 +92,8 @@ def goods_add_or_update(request):
         serializer.save()
         return JsonResponse(msg='修改成功')
     else:  # 新增
+        if request.data.get('id') == 0:
+            del request.data['id']
         serializer = GoodsDetailSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save(user=request.user)

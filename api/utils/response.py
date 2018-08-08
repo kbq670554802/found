@@ -67,5 +67,6 @@ class JsonResponse(Response):
             'detail': serializer.data,
             'page_index': page_index,
             'page_size': page_size,
-            'total': total
+            'total': total,
+            'has_more': objs_paging.has_next()
         }, msg=msg)  # 返回

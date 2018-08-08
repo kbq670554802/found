@@ -5,52 +5,6 @@ from announce.models import Goods, PageInfo
 from ._serializers import serializers, UsernameSerializer
 
 
-class UserLoginSerializer(serializers.Serializer):
-    username = serializers.CharField()
-    password = serializers.CharField(required=True)
-
-    def __init__(self, *args, **kwargs):
-        super(UserLoginSerializer, self).__init__(*args, **kwargs)
-        self.fields['password'].error_messages['required'] = u'请输入密码！'
-
-
-class UsernameOrEmailCheckSerializer(serializers.Serializer):
-    username = serializers.CharField(required=False)
-    email = serializers.EmailField(required=False)
-
-
-class UserRegisterSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=32)
-    password = serializers.CharField(min_length=6)
-    email = serializers.EmailField(max_length=64)
-    captcha = serializers.CharField()
-
-
-class UserChangePasswordSerializer(serializers.Serializer):
-    old_password = serializers.CharField()
-    new_password = serializers.CharField(min_length=6)
-    tfa_code = serializers.CharField(required=False, allow_blank=True)
-
-
-class UserChangeEmailSerializer(serializers.Serializer):
-    password = serializers.CharField()
-    new_email = serializers.EmailField(max_length=64)
-    tfa_code = serializers.CharField(required=False, allow_blank=True)
-
-
-class GenerateUserSerializer(serializers.Serializer):
-    prefix = serializers.CharField(max_length=16, allow_blank=True)
-    suffix = serializers.CharField(max_length=16, allow_blank=True)
-    number_from = serializers.IntegerField()
-    number_to = serializers.IntegerField()
-    password_length = serializers.IntegerField(max_value=16, default=8)
-
-
-class ImportUserSeralizer(serializers.Serializer):
-    users = serializers.ListField(
-        child=serializers.ListField(child=serializers.CharField(max_length=64)))
-
-
 # 用户信息序列化
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -166,17 +120,3 @@ class GoodsListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Goods
         fields = ('id', 'name', 'phone', 'contact', 'lost_date', 'lost_addr', 'summary', 'user', 'create_time')
-
-
-# 分页信息校验
-class PaginatorBaseSerializer(serializers.Serializer):
-    page_index = serializers.IntegerField(required=True, min_value=1,
-                                          error_messages={
-                                              'required': '请指定当前页',
-                                              'min_value': '当前页必须大于0',
-                                          })
-    page_size = serializers.IntegerField(required=True, min_value=1,
-                                         error_messages={
-                                             'required': '请指定每页大小',
-                                             'min_value': '每页大小必须大于0',
-                                         })
