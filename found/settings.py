@@ -35,7 +35,7 @@ AUTH_USER_MODEL = 'account.User'
 APPEND_SLASH = False
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['www.aiamoy.cn', '119.28.9.176']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
